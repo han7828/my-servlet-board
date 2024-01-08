@@ -21,9 +21,7 @@ public class BoardService extends HttpServlet {
     public void addBoard(Board board) {
         boardDao.save(board);
     }
-    public void updateBoard(Board board) {
-        boardDao.update(board);
-    }
+    public void updateBoard(Board board) { boardDao.update(board); }
     public void DeleteBoard(Board board) {
         boardDao.Delete(board);
     }

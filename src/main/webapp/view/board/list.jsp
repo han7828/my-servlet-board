@@ -79,15 +79,15 @@
 
 <body>
   <header>
-    <a class="logo" href="list.jsp"><img src="https://poiemaweb.com/img/logo.png"></a>
+    <a class="logo" href="/board/list"><img src="https://poiemaweb.com/img/logo.png"></a>
     <nav>
       <ul class="nav-items">
-        <li><a href="/view/board/list.jsp">게시글목록</a></li>
-        <li><a href="/view/board/createForm.jsp">게시글등록</a></li>
-        <li><a href="/view/board/updateForm.jsp">게시글수정</a></li>
-        <li><a href="/view/member/join.jsp">회원가입</a></li>
-        <li><a href="/view/member/registration.jsp">회원정보수정</a></li>
-        <li><a href="/view/member/login.jsp">로그인</a></li>
+        <li><a href="/board/list">게시글목록</a></li>
+        <li><a href="/board/createForm">게시글등록</a></li>
+        <li><a href="/board/updateForm">게시글수정</a></li>
+        <li><a href="/member/join">회원가입</a></li>
+        <li><a href="/member/registration">회원정보수정</a></li>
+        <li><a href="/member/login">로그인</a></li>
       </ul>
     </nav>
   </header>

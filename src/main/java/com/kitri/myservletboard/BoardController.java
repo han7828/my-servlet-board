@@ -57,13 +57,30 @@ public class BoardController extends HttpServlet {
             return;
         }
         else if (command.equals("/board/updateForm")){
+            Long id = Long.parseLong(request.getParameter("id"));
+            Board board = boardService.getBoard(id);
+            request.setAttribute("board", board);
+
             view += "updateForm.jsp";
         }
         else if (command.equals("/board/update")){
+            Long id = Long.parseLong(request.getParameter("id"));
+            String title = request.getParameter("title");
+            String content = request.getParameter("content");
 
+            Board boards = new Board(id, title, content, null, null, 0, 0);
+            boardService.updateBoard(boards);
+
+            response.sendRedirect("/board/list");
+            return;
         }
         else if (command.equals("/board/delete")){
 
+            Board board = boardService.getBoard(Long.parseLong(request.getParameter("id")));
+            boardService.DeleteBoard(board);
+
+            response.sendRedirect("/board/list");
+            return;
         }
         else if (command.contains("/board/detail")){
             Long id = Long.parseLong(request.getParameter("id"));
