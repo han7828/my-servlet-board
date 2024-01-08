@@ -51,6 +51,12 @@ public class BoardController extends HttpServlet {
 
         } else if (command.equals("/board/delete")){
 
+        } else if (command.contains("/board/detail")){
+            Long id = Long.parseLong(request.getParameter("id"));
+            Board board = boardService.getBoard(id);
+            request.setAttribute("board", board);
+
+            view += "detail.jsp";
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(view);

@@ -12,6 +12,7 @@ public class BoardService extends HttpServlet {
 
     BoardDao boardDao = BoardmemoryDao.getInstance();
     private BoardService() {};
+    public Board getBoard(Long id) { return boardDao.getById(id);}
     private static final BoardService instance = new BoardService();
     public static BoardService getInstance() {
         return instance;

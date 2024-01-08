@@ -79,7 +79,7 @@
 
 <body>
   <header>
-    <a class="logo" href="list.html"><img src="https://poiemaweb.com/img/logo.png"></a>
+    <a class="logo" href="list.jsp"><img src="https://poiemaweb.com/img/logo.png"></a>
     <nav>
       <ul class="nav-items">
         <li><a href="/view/board/list.jsp">게시글목록</a></li>
@@ -113,9 +113,9 @@
            for (int i = 0 ; i < boards.size() ; i++) { %>
           <tr>
             <th scope="row"><%= boards.get(i).getId() %></th>
-            <td><%= boards.get(i).getTitle() %></td>
+            <td><a href="/board/detail?id=<%=boards.get(i).getId()%>"><%= boards.get(i).getTitle() %></a></td>
             <td><%= boards.get(i).getWriter() %></td>
-            <td><%= boards.get(i).getCreateAt() %></td>
+            <td><%= boards.get(i).getCreatedAt() %></td>
             <td><%= boards.get(i).getViewCount() %></td>
             <td><%= boards.get(i).getCommentCount() %></td>
           </tr>

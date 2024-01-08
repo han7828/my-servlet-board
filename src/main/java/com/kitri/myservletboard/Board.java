@@ -8,18 +8,18 @@ public class Board {
     private String title;
     private String content;
     private String writer;
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
     private int viewCount;
     private int commentCount;
 
     public Board() {
     }
-    public Board(Long id, String title, String content, String writer, LocalDateTime createAt, int viewCount, int commentCount) {
+    public Board(Long id, String title, String content, String writer, LocalDateTime createdAt, int viewCount, int commentCount) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
-        this.createAt = createAt;
+        this.createdAt = createdAt;
         this.viewCount = viewCount;
         this.commentCount = commentCount;
     }
@@ -40,8 +40,8 @@ public class Board {
         return writer;
     }
 
-    public LocalDateTime getCreateAt() {
-        return createAt;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public int getViewCount() {
@@ -68,8 +68,8 @@ public class Board {
         this.writer = writer;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(LocalDateTime createAt) {
+        this.createdAt = createAt;
     }
 
     public void setViewCount(int viewCount) {
