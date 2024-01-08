@@ -1,17 +1,24 @@
 package com.kitri.myservletboard;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import service.BoardService;
+import com.kitri.myservletboard.Board;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @WebServlet("/board/*")
 public class BoardController extends HttpServlet {
+
+    BoardService boardService = BoardService.getInstance();
+
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -20,6 +27,7 @@ public class BoardController extends HttpServlet {
 
         out.println(request.getRequestURL());
 
+        request.setCharacterEncoding("UTF-8");
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String command = requestURI.substring(contextPath.length());
@@ -29,20 +37,57 @@ public class BoardController extends HttpServlet {
         String view = ("/view/board/");
 
         if (command.equals("/board/list")) {
+            ArrayList<Board> boards = boardService.getBoards();
+            request.setAttribute("boards", boards);
+
             view += "list.jsp";
-
-        } else if (command.equals("/board/createForm")){
+        }
+        else if (command.equals("/board/createForm")){
             view += "createForm.jsp";
+        }
+        else if (command.equals("/board/create")){
+            String title = request.getParameter("title");
+            String writer = request.getParameter("writer");
+            String content = request.getParameter("content");
 
-        } else if (command.equals("/board/create")){
+            Board boards = new Board(null, title, content, writer, LocalDateTime.now(), 0, 0);
+            boardService.addBoard(boards);
 
-        } else if (command.equals("/board/updateForm")){
+            response.sendRedirect("/board/list");
+            return;
+        }
+        else if (command.equals("/board/updateForm")){
+            Long id = Long.parseLong(request.getParameter("id"));
+            Board board = boardService.getBoard(id);
+            request.setAttribute("board", board);
+
             view += "updateForm.jsp";
+        }
+        else if (command.equals("/board/update")){
+            Long id = Long.parseLong(request.getParameter("id"));
+            String title = request.getParameter("title");
+            String content = request.getParameter("content");
 
-        } else if (command.equals("/board/update")){
+            Board boards = new Board(id, title, content, null, null, 0, 0);
+            boardService.updateBoard(boards);
 
-        } else if (command.equals("/board/delete")){
+            response.sendRedirect("/board/list");
+            return;
+        }
+        else if (command.equals("/board/delete")){
 
+            Board board = boardService.getBoard(Long.parseLong(request.getParameter("id")));
+            boardService.DeleteBoard(board);
+
+            response.sendRedirect("/board/list");
+            return;
+        }
+        else if (command.contains("/board/detail")){
+            Long id = Long.parseLong(request.getParameter("id"));
+            Board board = boardService.getBoard(id);
+            request.setAttribute("board", board);
+
+            view += "detail.jsp";
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(view);

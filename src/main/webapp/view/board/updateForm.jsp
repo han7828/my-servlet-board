@@ -98,33 +98,32 @@
 </head>
 
 <body>
-
-    <header>
-        <a class="logo" href="list.jsp"><img src="https://poiemaweb.com/img/logo.png"></a>
-        <nav>
-            <ul class="nav-items">
-                <li><a href="/view/board/list.jsp">게시글목록</a></li>
-                <li><a href="/view/board/createForm.jsp">게시글등록</a></li>
-                <li><a href="/view/board/updateForm.jsp">게시글수정</a></li>
-                <li><a href="/view/member/join.jsp">회원가입</a></li>
-                <li><a href="/view/member/registration.jsp">회원정보수정</a></li>
-                <li><a href="/view/member/login.jsp">로그인</a></li>
-            </ul>
-        </nav>
-    </header>
-
-
+<header>
+    <a class="logo" href="/board/list"><img src="https://poiemaweb.com/img/logo.png"></a>
+    <nav>
+        <ul class="nav-items">
+            <li><a href="/board/list">게시글목록</a></li>
+            <li><a href="/board/createForm">게시글등록</a></li>
+            <li><a href="/board/updateForm">게시글수정</a></li>
+            <li><a href="/member/join">회원가입</a></li>
+            <li><a href="/member/registration">회원정보수정</a></li>
+            <li><a href="/member/login">로그인</a></li>
+        </ul>
+    </nav>
+</header>
     <div class="container">
         <div class="input-form-backgroud row">
             <div class="input-form col-md-12 mx-auto">
                 <h4 class="mb-3"><b>게시물 수정</b></h4>
                 <hr>
                 <br>
-                <form class="validation-form" novalidate>
+                <form class="validation-form" novalidate action="/board/update" method="post">
+
+                    <input name="id" type="text" value="${board.getId()}" hidden>
 
                     <div class="mb-3">
-                        <label for="address">제목</label>
-                        <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요" required>
+                        <label for="title">제목</label>
+                        <input name="title" type="text" class="form-control" id="title" placeholder="" value="${board.getTitle()}" required>
                         <div class="invalid-feedback">
                             제목을 입력해주세요.
                         </div>
@@ -132,38 +131,36 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="name">작성자</label>
-                            <input type="text" class="form-control" id="name" placeholder="작성자를 입력해주세요." value="" required>
+                            <label for="writer">작성자</label>
+                            <input name="writer" type="text" class="form-control" id="writer" placeholder="" value="${board.getWriter()}" required>
                             <div class="invalid-feedback">
                                 작성자를 입력해주세요.
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="name">비밀번호</label>
-                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요"
-                                value="" required>
-                            <div class="invalid-feedback">
-                                비밀번호를 입력해주세요.
-                            </div>
-                        </div>
+<%--                        <div class="col-md-6 mb-3">--%>
+<%--                            <label for="name">비밀번호</label>--%>
+<%--                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요"--%>
+<%--                                value="" required>--%>
+<%--                            <div class="invalid-feedback">--%>
+<%--                                비밀번호를 입력해주세요.--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
                     </div>
                     <div class="mb-3">
-                        <label for="contents" class="form-label">내용</label>
-                        <textarea name="contents" class="form-control" cols="30" rows="5"
-                            placeholder="내용을 입력해주세요"></textarea>
+                        <label for="content" class="form-label">내용</label>
+                        <textarea name="content" class="form-control" id="content" cols="30" rows="5" placeholder="" value="">${board.getContent()}</textarea>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <button class="btn btn-secondary btn-block" type="submit">게시물 등록하기</button>
+                            <button class="btn btn-secondary btn-block" type="submit">게시물 수정하기</button>
                         </div>
                         <div class="col-md-6 mb-3">
                             <button class="btn btn-secondary btn-block" type="submit">취소</button>
                         </div>
                     </div>
+                </form>
             </div>
-
-            </form>
         </div>
     </div>
     <div class="p-2">

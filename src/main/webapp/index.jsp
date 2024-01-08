@@ -9,7 +9,7 @@
 <br/>
 <a href="hello-servlet">Hello Servlet</a>
 <%
-        response.sendRedirect("/view/board/list.jsp");
+        response.sendRedirect("/board/list");
 %>
 </s>
 </body>
