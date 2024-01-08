@@ -1,7 +1,7 @@
 package com.kitri.myservletboard;
 
-
 import service.BoardService;
+import com.kitri.myservletboard.Board;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @WebServlet("/board/*")
@@ -26,6 +27,7 @@ public class BoardController extends HttpServlet {
 
         out.println(request.getRequestURL());
 
+        request.setCharacterEncoding("UTF-8");
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String command = requestURI.substring(contextPath.length());
@@ -37,21 +39,33 @@ public class BoardController extends HttpServlet {
         if (command.equals("/board/list")) {
             ArrayList<Board> boards = boardService.getBoards();
             request.setAttribute("boards", boards);
+
             view += "list.jsp";
-
-        } else if (command.equals("/board/createForm")){
+        }
+        else if (command.equals("/board/createForm")){
             view += "createForm.jsp";
+        }
+        else if (command.equals("/board/create")){
+            String title = request.getParameter("title");
+            String writer = request.getParameter("writer");
+            String content = request.getParameter("content");
 
-        } else if (command.equals("/board/create")){
+            Board boards = new Board(null, title, content, writer, LocalDateTime.now(), 0, 0);
+            boardService.addBoard(boards);
 
-        } else if (command.equals("/board/updateForm")){
+            response.sendRedirect("/board/list");
+            return;
+        }
+        else if (command.equals("/board/updateForm")){
             view += "updateForm.jsp";
+        }
+        else if (command.equals("/board/update")){
 
-        } else if (command.equals("/board/update")){
+        }
+        else if (command.equals("/board/delete")){
 
-        } else if (command.equals("/board/delete")){
-
-        } else if (command.contains("/board/detail")){
+        }
+        else if (command.contains("/board/detail")){
             Long id = Long.parseLong(request.getParameter("id"));
             Board board = boardService.getBoard(id);
             request.setAttribute("board", board);

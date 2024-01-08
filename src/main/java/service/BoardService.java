@@ -4,12 +4,10 @@ import com.kitri.myservletboard.Board;
 import dao.BoardDao;
 import dao.BoardmemoryDao;
 
-
 import javax.servlet.http.HttpServlet;
 import java.util.ArrayList;
 
 public class BoardService extends HttpServlet {
-
     BoardDao boardDao = BoardmemoryDao.getInstance();
     private BoardService() {};
     public Board getBoard(Long id) { return boardDao.getById(id);}
@@ -17,7 +15,6 @@ public class BoardService extends HttpServlet {
     public static BoardService getInstance() {
         return instance;
     }
-
     public ArrayList<Board> getBoards() {
         return boardDao.getAll();
     }

@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class BoardmemoryDao implements BoardDao{
-
     private static final BoardmemoryDao instance = new BoardmemoryDao();
     public static BoardmemoryDao getInstance() {
         return instance;
@@ -39,6 +38,20 @@ public class BoardmemoryDao implements BoardDao{
 
     @Override
     public void save(Board board) {
+        Long id = 0L;
+        boolean fleg = false;
+
+        while (!fleg) {
+            fleg = true;
+            id++;
+            for ( Board board_ : memoryBoardDB) {
+                if ( id == board_.getId()) {
+                    fleg = false;
+                    break;
+                }
+            }
+        }
+        board.setId(id);
         memoryBoardDB.add(board);
     }
 

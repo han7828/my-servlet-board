@@ -117,11 +117,10 @@
         <h4 class="mb-3"><b>게시물 등록</b></h4>
         <hr>
         <br>
-        <form class="validation-form" novalidate>
-
+        <form class="validation-form" novalidate action="/board/create" method="post">
           <div class="mb-3">
-            <label for="address">제목</label>
-            <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요" required>
+            <label for="title">제목</label>
+            <input name="title" type="text" class="form-control" id="title" placeholder="제목을 입력해주세요" required>
             <div class="invalid-feedback">
               제목을 입력해주세요.
             </div>
@@ -129,23 +128,23 @@
 
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label for="name">작성자</label>
-              <input type="text" class="form-control" id="name" placeholder="작성자를 입력해주세요." value="" required>
+              <label for="writer">작성자</label>
+              <input name="writer" type="text" class="form-control" id="writer" placeholder="작성자를 입력해주세요." value="" required>
               <div class="invalid-feedback">
                 작성자를 입력해주세요.
               </div>
             </div>
-            <div class="col-md-6 mb-3">
-              <label for="name">비밀번호</label>
-              <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요" value="" required>
-              <div class="invalid-feedback">
-                비밀번호를 입력해주세요.
-              </div>
-            </div>
+<%--            <div class="col-md-6 mb-3">--%>
+<%--              <label for="name">비밀번호</label>--%>
+<%--              <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요" value="" required>--%>
+<%--              <div class="invalid-feedback">--%>
+<%--                비밀번호를 입력해주세요.--%>
+<%--              </div>--%>
+<%--            </div>--%>
           </div>
           <div class="mb-3">
-            <label for="contents" class="form-label">내용</label>
-            <textarea name="contents" class="form-control" cols="30" rows="5" placeholder="내용을 입력해주세요"></textarea>
+            <label for="content" class="form-label">내용</label>
+            <textarea name="content" class="form-control" id="content" cols="30" rows="5" placeholder="내용을 입력해주세요"></textarea>
           </div>
           <br>
           <div class="row">
@@ -156,9 +155,8 @@
               <button class="btn btn-secondary btn-block" type="submit">취소</button>
             </div>
           </div>
+        </form>
       </div>
-
-      </form>
     </div>
   </div>
   <div class="p-2">
