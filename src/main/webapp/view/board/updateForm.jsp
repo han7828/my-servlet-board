@@ -130,13 +130,13 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="writer">작성자</label>
-                            <input name="writer" type="text" class="form-control" id="writer" placeholder="" value="${board.getWriter()}" required>
-                            <div class="invalid-feedback">
-                                작성자를 입력해주세요.
-                            </div>
-                        </div>
+<%--                        <div class="col-md-6 mb-3">--%>
+<%--                            <label for="writer">작성자</label>--%>
+<%--                            <input name="writer" type="text" class="form-control" id="writer" placeholder="" value="${board.getWriter()}" required>--%>
+<%--                            <div class="invalid-feedback">--%>
+<%--                                작성자를 입력해주세요.--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
 <%--                        <div class="col-md-6 mb-3">--%>
 <%--                            <label for="name">비밀번호</label>--%>
 <%--                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요"--%>
