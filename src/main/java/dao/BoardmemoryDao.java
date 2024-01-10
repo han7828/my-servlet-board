@@ -1,6 +1,7 @@
 package dao;
 
 import com.kitri.myservletboard.Board;
+import com.kitri.myservletboard.Pagination;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -25,17 +26,15 @@ public class BoardmemoryDao implements BoardDao{
         memoryBoardDB.add(new Board(10L, "열번째 글입니다!", "반갑습니다1111.", "황xx", LocalDateTime.now(), 24, 6));
     }
     @Override
-    public ArrayList<Board> getAll() {
-        return memoryBoardDB;
-    }
-
+    public ArrayList<Board> getAll() { return memoryBoardDB; }
+    @Override
+    public ArrayList<Board> getAll(Pagination pagination) { return null; }
     @Override
     public Board getById(Long id) {
         return memoryBoardDB.stream().filter(board -> {
             return board.getId() == id;
         }).findFirst().get();
     }
-
     @Override
     public void save(Board board) {
         Long id = 0L;
@@ -60,8 +59,6 @@ public class BoardmemoryDao implements BoardDao{
         Board board_ = getById(board.getId());
         board_.setTitle(board.getTitle());
         board_.setContent(board.getContent());
-//        memoryBoardDB.remove(board_);
-//        memoryBoardDB.add(board_);
     }
 
     @Override

@@ -37,9 +37,14 @@ public class BoardController extends HttpServlet {
         String view = ("/view/board/");
 
         if (command.equals("/board/list")) {
-            ArrayList<Board> boards = boardService.getBoards();
-            request.setAttribute("boards", boards);
+            String page = request.getParameter("page");
+            if (page == null) { page = "1"; }
 
+            Pagination pagination = new Pagination(Integer.parseInt(page));
+            ArrayList<Board> boards = boardService.getBoards(pagination);
+
+            request.setAttribute("pagination",pagination);
+            request.setAttribute("boards", boards);
             view += "list.jsp";
         }
         else if (command.equals("/board/createForm")){
