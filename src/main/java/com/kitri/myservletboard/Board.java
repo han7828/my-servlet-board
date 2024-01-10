@@ -1,6 +1,5 @@
 package com.kitri.myservletboard;
 
-
 import java.time.LocalDateTime;
 
 public class Board {
