@@ -2,9 +2,9 @@ package service;
 
 import com.kitri.myservletboard.Board;
 import com.kitri.myservletboard.Pagination;
+import com.kitri.myservletboard.SearchData;
 import dao.BoardDao;
 import dao.BoardJdbcDao;
-import dao.BoardmemoryDao;
 
 import javax.servlet.http.HttpServlet;
 import java.util.ArrayList;
@@ -32,5 +32,10 @@ public class BoardService extends HttpServlet {
     public void DeleteBoard(Board board) {
         boardDao.Delete(board);
     }
-
+    public ArrayList<Board> searchBoard(SearchData searchData, Pagination pagination) {
+        searchData.setTimeIndex(searchData.getSearchTime());
+        pagination.setTotalRecords(((BoardJdbcDao)boardDao).searchCount(searchData));
+        pagination.calcPagination();
+        return boardDao.search(searchData, pagination);
+    }
 }

@@ -1,6 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.kitri.myservletboard.Board" %>
 <%@ page import="com.kitri.myservletboard.Pagination" %>
+<%@ page import="com.kitri.myservletboard.SearchData" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,19 +41,20 @@
         </tbody>
       </table>
       <div>
-        <a href="/board/createForm" role="button" class="btn btn-outline-dark">글쓰기</a>
+        <a href="/board/createForm" role="button" class="btn btn-secondary my-2 my-sm-0">글쓰기</a>
       </div>
       <div class="d-flex justify-content-center">
       <nav aria-label="Page navigation example">
         <ul class="pagination pagination-sm">
           <% Pagination pagination = (Pagination) request.getAttribute("pagination"); %>
+          <% SearchData searchData = (SearchData) request.getAttribute("searchData"); %>
           <% if (pagination.isHasPrev()) { %>
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen() - 1%>" tabindex="1" aria-disabled="true"><<</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen() - 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>" tabindex="1" aria-disabled="true"><<</a>
           </li>
           <% } else { %>
           <li class="page-item disabled">
-            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen() - 1%>" tabindex="1" aria-disabled="true"><<</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen() - 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>" tabindex="1" aria-disabled="true"><<</a>
           </li>
           <% }%>
 
@@ -60,24 +62,42 @@
             for(int i = pagination.getStartPageOnScreen(); i <= pagination.getEndPageOnScreen(); i++) {
               if(pagination.getPage() == i ) {
           %>
-              <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>"><%=i%></a></li>
+              <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>"><%=i%></a></li>
             <% } else { %>
-              <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>"><%=i%></a></li>
+              <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>"><%=i%></a></li>
             <% } %>
           <% } %>
 
           <% if (pagination.isHasNext()) { %>
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>" tabindex="1" aria-disabled="true">>></a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>" tabindex="1" aria-disabled="true">>></a>
           </li>
           <% } else { %>
           <li class="page-item disabled">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>" tabindex="1" aria-disabled="true">>></a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>" tabindex="1" aria-disabled="true">>></a>
           </li>
           <% }%>
         </ul>
       </nav>
     </div>
+      <div class="searchBox">
+        <form class="d-flex" novalidate action="/board/list" method="post">
+          <select name="searchTime" class="form-select" id="exampleSelect1">
+            <option value="allday" <% if (searchData.getSearchTime().equals("allday")) {%>selected<%}%> >전체 기간</option>
+            <option value="1day" <% if (searchData.getSearchTime().equals("1day")) {%>selected<%}%> >1일</option>
+            <option value="1week" <% if (searchData.getSearchTime().equals("1week")) {%>selected<%}%> >1주</option>
+            <option value="1month" <% if (searchData.getSearchTime().equals("1month")) {%>selected<%}%> >1개월</option>
+            <option value="6month" <% if (searchData.getSearchTime().equals("6month")) {%>selected<%}%> >6개월</option>
+            <option value="1year" <% if (searchData.getSearchTime().equals("1year")) {%>selected<%}%> >1년</option>
+          </select>
+          <select name="searchField" class="form-select" id="exampleSelect2">
+            <option value="title" <% if (searchData.getSearchField().equals("title")) {%>selected<%}%> >제목</option>
+            <option value="writer" <% if (searchData.getSearchField().equals("writer")) {%>selected<%}%> >작성자</option>
+          </select>
+          <input name="searchText" class="form-control me-sm-2" type="search" placeholder="<%=searchData.getSearchText()%>" onfocus="this.placeholder='Search'" onblur="<%=searchData.getSearchText()%>">
+          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
     </div>
   </div>
   <div class="p-2">

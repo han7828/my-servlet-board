@@ -40,9 +40,20 @@ public class BoardController extends HttpServlet {
             String page = request.getParameter("page");
             if (page == null) { page = "1"; }
 
-            Pagination pagination = new Pagination(Integer.parseInt(page));
-            ArrayList<Board> boards = boardService.getBoards(pagination);
+            String searchTime = request.getParameter("searchTime");
+            String searchField = request.getParameter("searchField");
+            String searchText = request.getParameter("searchText");
 
+            SearchData searchData = new SearchData(searchField, searchText, searchTime);
+            Pagination pagination = new Pagination(Integer.parseInt(page));
+            ArrayList<Board> boards = null;
+
+            if (searchText != null ) {
+                boards = boardService.searchBoard(searchData, pagination);
+            } else {
+                boards = boardService.getBoards(pagination);
+            }
+            request.setAttribute("searchData",searchData);
             request.setAttribute("pagination",pagination);
             request.setAttribute("boards", boards);
             view += "list.jsp";

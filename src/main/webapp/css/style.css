@@ -292,3 +292,16 @@ nav {
 .nav-items>li>a:hover {
     color: rgba(0, 0, 0, 0.8);
 }
+
+.searchBox {
+    position: relative;
+    left: 25%;
+    display: inline-block;
+}
+.form-select {
+    width: 120px;
+    margin-right: 5px;
+}
+.d-flex > input {
+    width: 300px;
+}

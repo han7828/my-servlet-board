@@ -3,7 +3,6 @@
 <head>
     <title>Title</title>
 </head>
-
 <body>
 <header>
     <a class="logo" href="/board/list">HOME</a>

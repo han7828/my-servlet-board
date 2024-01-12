@@ -2,6 +2,7 @@ package dao;
 
 import com.kitri.myservletboard.Board;
 import com.kitri.myservletboard.Pagination;
+import com.kitri.myservletboard.SearchData;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -64,5 +65,11 @@ public class BoardmemoryDao implements BoardDao{
     @Override
     public void Delete(Board board) {
         memoryBoardDB.remove(board);
+    }
+
+    @Override
+    public ArrayList<Board> search(SearchData searchData, Pagination pagination) {
+        memoryBoardDB.contains(searchData);
+        return null;
     }
 }
