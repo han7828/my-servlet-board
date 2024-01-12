@@ -17,7 +17,6 @@ public class Pagination {
         if ( this.endPageOnScreen > totalPages ) {
             this.endPageOnScreen = totalPages;
         }
-
         if (this.endPageOnScreen < totalPages) {
             this.hasNext = true;
         }

@@ -2,6 +2,7 @@ package dao;
 
 import com.kitri.myservletboard.Board;
 import com.kitri.myservletboard.Pagination;
+import com.kitri.myservletboard.SearchData;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -228,6 +229,104 @@ public class BoardJdbcDao implements BoardDao{
         try {
             connection = connectDB();
             String sql = "SELECT count(*) FROM board";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            rs.next();
+            count = rs.getInt("count(*)");
+        }
+        catch (Exception e) {
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return count;
+    }
+    public ArrayList<Board> search(SearchData searchData, Pagination pagination) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        ArrayList<Board> boards = new ArrayList<>();
+        String searchField = searchData.getSearchField();
+
+        try {
+            connection = connectDB();
+            String sql = null;
+            if (searchField.equals("title")) {
+                sql = "SELECT * FROM board WHERE title LIKE '%" + searchData.getSearchText() + "%' LIMIT ?, ?";
+                if ( !searchData.getSearchTime().equals("allday") ) {
+                    sql = "SELECT * FROM board WHERE title LIKE '%" + searchData.getSearchText() + "%' " +
+                            "AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL " + searchData.getTimeIndex() +" DAY) AND DATE(NOW() + INTERVAL 1 DAY) LIMIT ?, ?";
+                }
+            } else if (searchField.equals("writer")) {
+                sql = "SELECT * FROM board where writer LIKE '%" + searchData.getSearchText() + "%' LIMIT ?, ?";
+                if ( !searchData.getSearchTime().equals("allday") ) {
+                    sql = "SELECT * FROM board WHERE writer LIKE '%" + searchData.getSearchText() + "%' " +
+                            "AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL " + searchData.getTimeIndex() +" DAY) AND DATE(NOW() + INTERVAL 1 DAY) LIMIT ?, ?";
+                }
+            }
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, ( pagination.getPage() - 1 ) * pagination.getRecordsPerPage() );
+            ps.setInt(2, pagination.getRecordsPerPage());
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Long id = rs.getLong("id");
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                String writer = rs.getString("writer");
+                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+                int viewCount = rs.getInt("view_Count");
+                int commentCount = rs.getInt("comment_count");
+
+                boards.add(new Board(id, title, content, writer, createdAt, viewCount, commentCount));
+            }
+        } catch (Exception e) {
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return boards;
+    }
+    public int searchCount(SearchData searchData) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        int count = 0;
+        String searchField = searchData.getSearchField();
+
+        try {
+            connection = connectDB();
+            String sql = null;
+//            if (searchField.equals("title")) {
+//                sql = "SELECT count(*) FROM board where title LIKE '%" + searchData.getSearchText() + "%'";
+//            } else if (searchField.equals("writer")) {
+//                sql = "SELECT count(*) FROM board where writer LIKE '%" + searchData.getSearchText() + "%'";
+//            }
+            if (searchField.equals("title")) {
+                sql = "SELECT count(*) FROM board WHERE title LIKE '%" + searchData.getSearchText() + "%' ";
+                if ( !searchData.getSearchTime().equals("allday") ) {
+                    sql = "SELECT count(*) FROM board WHERE title LIKE '%" + searchData.getSearchText() + "%' " +
+                            "AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL " + searchData.getTimeIndex() +" DAY) AND DATE(NOW() + INTERVAL 1 DAY) ";
+                }
+            } else if (searchField.equals("writer")) {
+                sql = "SELECT count(*) FROM board where writer LIKE '%" + searchData.getSearchText() + "%' ";
+                if ( !searchData.getSearchTime().equals("allday") ) {
+                    sql = "SELECT count(*) FROM board WHERE writer LIKE '%" + searchData.getSearchText() + "%' " +
+                            "AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL " + searchData.getTimeIndex() +" DAY) AND DATE(NOW() + INTERVAL 1 DAY) ";
+                }
+            }
             ps = connection.prepareStatement(sql);
             rs = ps.executeQuery();
             rs.next();

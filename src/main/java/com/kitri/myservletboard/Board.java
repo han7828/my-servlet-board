@@ -1,6 +1,7 @@
 package com.kitri.myservletboard;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Board {
     private Long id;
@@ -10,7 +11,6 @@ public class Board {
     private LocalDateTime createdAt;
     private int viewCount;
     private int commentCount;
-
     public Board() {
     }
     public Board(Long id, String title, String content, String writer, LocalDateTime createdAt, int viewCount, int commentCount) {
@@ -26,55 +26,40 @@ public class Board {
     public Long getId() {
         return id;
     }
-
     public String getTitle() {
         return title;
     }
-
     public String getContent() {
         return content;
     }
-
     public String getWriter() {
         return writer;
     }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
+    public LocalDateTime getCreatedAt() { return createdAt;}
     public int getViewCount() {
         return viewCount;
     }
-
     public int getCommentCount() {
         return commentCount;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
-
     public void setContent(String content) {
         this.content = content;
     }
-
     public void setWriter(String writer) {
         this.writer = writer;
     }
-
     public void setCreatedAt(LocalDateTime createAt) {
         this.createdAt = createAt;
     }
-
     public void setViewCount(int viewCount) {
         this.viewCount = viewCount;
     }
-
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
     }

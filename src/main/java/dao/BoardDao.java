@@ -2,6 +2,7 @@ package dao;
 
 import com.kitri.myservletboard.Board;
 import com.kitri.myservletboard.Pagination;
+import com.kitri.myservletboard.SearchData;
 
 import java.util.ArrayList;
 
@@ -12,5 +13,5 @@ public interface BoardDao {
     public void save(Board board);
     public void update(Board board);
     public void Delete(Board board);
-
+    public ArrayList<Board> search(SearchData searchData, Pagination pagination);
 }
