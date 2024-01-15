@@ -1,4 +1,4 @@
-package com.kitri.myservletboard;
+package data;
 
 import java.time.LocalDate;
 
@@ -35,7 +35,6 @@ public class SearchData {
         if (setSearchTime.equals("1month")) { this.timeIndex = 30; }
         if (setSearchTime.equals("6month")) { this.timeIndex = 180; }
         if (setSearchTime.equals("1year")) { this.timeIndex = 365; }
-
     }
     public int getTimeIndex() {
         return timeIndex;

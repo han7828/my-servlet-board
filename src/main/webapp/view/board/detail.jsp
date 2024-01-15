@@ -8,7 +8,6 @@
 <jsp:include page="/view/common/header.jsp"/>
 <main class="mt-5 pt-5">
     <div class="container-fluid px-4 ">
-
         <div class="card mb-4 w-50 mx-auto">
             <div>
                 <h2 class="mt-3" style="text-align: center;"><b>게시판 상세</b></h2>

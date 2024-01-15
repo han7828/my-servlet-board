@@ -1,7 +1,9 @@
 package com.kitri.myservletboard;
 
+import data.Organize;
+import data.Pagination;
+import data.SearchData;
 import service.BoardService;
-import com.kitri.myservletboard.Board;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -39,22 +41,30 @@ public class BoardController extends HttpServlet {
         if (command.equals("/board/list")) {
             String page = request.getParameter("page");
             if (page == null) { page = "1"; }
+            String organize = request.getParameter("organize");
+            if (organize == null) { organize = "newest"; }
+            String recordsPerPage = request.getParameter("recordsPerPage");
+            if (recordsPerPage == null) { recordsPerPage = "10"; }
 
             String searchTime = request.getParameter("searchTime");
             String searchField = request.getParameter("searchField");
             String searchText = request.getParameter("searchText");
 
+            Organize organizes = new Organize(organize);
             SearchData searchData = new SearchData(searchField, searchText, searchTime);
             Pagination pagination = new Pagination(Integer.parseInt(page));
+            pagination.setRecordsPerPage(Integer.parseInt(recordsPerPage));
             ArrayList<Board> boards = null;
 
             if (searchText != null ) {
-                boards = boardService.searchBoard(searchData, pagination);
+                boards = boardService.searchBoard(searchData, pagination, organizes);
             } else {
-                boards = boardService.getBoards(pagination);
+                boards = boardService.getBoards(pagination, organizes);
             }
+
             request.setAttribute("searchData",searchData);
             request.setAttribute("pagination",pagination);
+            request.setAttribute("organize",organizes);
             request.setAttribute("boards", boards);
             view += "list.jsp";
         }

@@ -1,8 +1,9 @@
 package dao;
 
 import com.kitri.myservletboard.Board;
-import com.kitri.myservletboard.Pagination;
-import com.kitri.myservletboard.SearchData;
+import data.Organize;
+import data.Pagination;
+import data.SearchData;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class BoardmemoryDao implements BoardDao{
     @Override
     public ArrayList<Board> getAll() { return memoryBoardDB; }
     @Override
-    public ArrayList<Board> getAll(Pagination pagination) { return null; }
+    public ArrayList<Board> getAll(Pagination pagination, Organize organize) { return null; }
     @Override
     public Board getById(Long id) {
         return memoryBoardDB.stream().filter(board -> {
@@ -68,8 +69,13 @@ public class BoardmemoryDao implements BoardDao{
     }
 
     @Override
-    public ArrayList<Board> search(SearchData searchData, Pagination pagination) {
+    public ArrayList<Board> search(SearchData searchData, Pagination pagination, Organize organize) {
         memoryBoardDB.contains(searchData);
         return null;
+    }
+
+    @Override
+    public void viewCount(Long id) {
+
     }
 }

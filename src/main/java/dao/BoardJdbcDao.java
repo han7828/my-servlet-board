@@ -1,8 +1,9 @@
 package dao;
 
 import com.kitri.myservletboard.Board;
-import com.kitri.myservletboard.Pagination;
-import com.kitri.myservletboard.SearchData;
+import data.Organize;
+import data.Pagination;
+import data.SearchData;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -69,16 +70,17 @@ public class BoardJdbcDao implements BoardDao{
         return boards;
     }
     @Override
-    public ArrayList<Board> getAll(Pagination pagination) {
+    public ArrayList<Board> getAll(Pagination pagination, Organize organize) {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         ArrayList<Board> boards = new ArrayList<>();
+        String orderBy = organize.getOrderBy();
 
         try {
             connection = connectDB();
-            String sql = "SELECT * FROM board LIMIT ?, ?";
+            String sql = "SELECT * FROM board " + orderBy + " LIMIT ?, ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, ( pagination.getPage() - 1 ) * pagination.getRecordsPerPage() );
             ps.setInt(2, pagination.getRecordsPerPage());
@@ -246,28 +248,29 @@ public class BoardJdbcDao implements BoardDao{
         }
         return count;
     }
-    public ArrayList<Board> search(SearchData searchData, Pagination pagination) {
+    public ArrayList<Board> search(SearchData searchData, Pagination pagination, Organize organize) {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
         ArrayList<Board> boards = new ArrayList<>();
         String searchField = searchData.getSearchField();
+        String orderBy = organize.getOrderBy();
 
         try {
             connection = connectDB();
             String sql = null;
             if (searchField.equals("title")) {
-                sql = "SELECT * FROM board WHERE title LIKE '%" + searchData.getSearchText() + "%' LIMIT ?, ?";
+                sql = "SELECT * FROM board WHERE title LIKE '%" + searchData.getSearchText() + "%' " + orderBy + " LIMIT ?, ?";
                 if ( !searchData.getSearchTime().equals("allday") ) {
                     sql = "SELECT * FROM board WHERE title LIKE '%" + searchData.getSearchText() + "%' " +
-                            "AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL " + searchData.getTimeIndex() +" DAY) AND DATE(NOW() + INTERVAL 1 DAY) LIMIT ?, ?";
+                            "AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL " + searchData.getTimeIndex() +" DAY) AND DATE(NOW() + INTERVAL 1 DAY) " + orderBy + " LIMIT ?, ?";
                 }
             } else if (searchField.equals("writer")) {
-                sql = "SELECT * FROM board where writer LIKE '%" + searchData.getSearchText() + "%' LIMIT ?, ?";
+                sql = "SELECT * FROM board where writer LIKE '%" + searchData.getSearchText() + "%' " + orderBy + " LIMIT ?, ?";
                 if ( !searchData.getSearchTime().equals("allday") ) {
                     sql = "SELECT * FROM board WHERE writer LIKE '%" + searchData.getSearchText() + "%' " +
-                            "AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL " + searchData.getTimeIndex() +" DAY) AND DATE(NOW() + INTERVAL 1 DAY) LIMIT ?, ?";
+                            "AND created_at BETWEEN DATE_SUB(NOW(), INTERVAL " + searchData.getTimeIndex() +" DAY) AND DATE(NOW() + INTERVAL 1 DAY) " + orderBy + " LIMIT ?, ?";
                 }
             }
             ps = connection.prepareStatement(sql);
@@ -309,11 +312,6 @@ public class BoardJdbcDao implements BoardDao{
         try {
             connection = connectDB();
             String sql = null;
-//            if (searchField.equals("title")) {
-//                sql = "SELECT count(*) FROM board where title LIKE '%" + searchData.getSearchText() + "%'";
-//            } else if (searchField.equals("writer")) {
-//                sql = "SELECT count(*) FROM board where writer LIKE '%" + searchData.getSearchText() + "%'";
-//            }
             if (searchField.equals("title")) {
                 sql = "SELECT count(*) FROM board WHERE title LIKE '%" + searchData.getSearchText() + "%' ";
                 if ( !searchData.getSearchTime().equals("allday") ) {
@@ -343,5 +341,28 @@ public class BoardJdbcDao implements BoardDao{
             }
         }
         return count;
+    }
+    public void viewCount(Long id) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            connection = connectDB();
+            String sql = "UPDATE board SET view_count = view_count + 1 WHERE id = ?;";
+            ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        }
+        catch (Exception e) { }
+        finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
