@@ -1,8 +1,12 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.kitri.myservletboard.Board" %>
-<%@ page import="com.kitri.myservletboard.Pagination" %>
-<%@ page import="com.kitri.myservletboard.SearchData" %>
+<%@ page import="data.Pagination" %>
+<%@ page import="data.SearchData" %>
+<%@ page import="data.Organize" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<% Pagination pagination = (Pagination) request.getAttribute("pagination"); %>
+<% SearchData searchData = (SearchData) request.getAttribute("searchData"); %>
+<% Organize organize = (Organize) request.getAttribute("organize"); %>
 <!DOCTYPE html>
 <html lang="en">
 <jsp:include page="/view/common/head.jsp">
@@ -12,6 +16,26 @@
   <jsp:include page="/view/common/header.jsp"/>
   <div>
     <h2 style="text-align: center; margin-top: 100px;"><b>게시판 목록</b></h2>
+  </div>
+  <div class="pageOption">
+    <form class="d-flex" novalidate action="/board/list" method="get">
+      <input hidden="hidden" name="searchField" value="<%=searchData.getSearchField()%>">
+      <input hidden="hidden" name="searchText" value="<%=searchData.getSearchText()%>">
+      <input hidden="hidden" name="searchTime" value="<%=searchData.getSearchTime()%>">
+      <select name="organize" class="form-select" id="organize1" onchange="this.form.submit()">
+        <option value="newest" <% if (organize.getOrganize().equals("newest")) {%>szelected<%}%> >최신 순</option>
+        <option value="oldest" <% if (organize.getOrganize().equals("oldest")) {%>selected<%}%> >과거 순</option>
+        <option value="views" <% if (organize.getOrganize().equals("views")) {%>selected<%}%> >조회수 순</option>
+        <option value="accuracy" <% if (organize.getOrganize().equals("accuracy")) {%>selected<%}%> >정확도 순</option>
+      </select>
+      <select name="recordsPerPage" class="form-select" id="recordsPerPage1" onchange="this.form.submit()">
+        <option value="10" <% if (pagination.getRecordsPerPage() == 10) {%>selected<%}%> >10개씩</option>
+        <option value="20" <% if (pagination.getRecordsPerPage() == 20) {%>selected<%}%> >20개씩</option>
+        <option value="30" <% if (pagination.getRecordsPerPage() == 30) {%>selected<%}%> >30개씩</option>
+        <option value="40" <% if (pagination.getRecordsPerPage() == 40) {%>selected<%}%> >40개씩</option>
+        <option value="50" <% if (pagination.getRecordsPerPage() == 50) {%>selected<%}%> >50개씩</option>
+      </select>
+    </form>
   </div>
   <div class="container class=d-flex justify-content-center">
     <div class="p-2 border-primary mb-3">
@@ -46,15 +70,13 @@
       <div class="d-flex justify-content-center">
       <nav aria-label="Page navigation example">
         <ul class="pagination pagination-sm">
-          <% Pagination pagination = (Pagination) request.getAttribute("pagination"); %>
-          <% SearchData searchData = (SearchData) request.getAttribute("searchData"); %>
           <% if (pagination.isHasPrev()) { %>
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen() - 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>" tabindex="1" aria-disabled="true"><<</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen() - 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>&recordsPerPage=<%=pagination.getRecordsPerPage()%>&organize=<%=organize.getOrganize()%>" tabindex="1" aria-disabled="true"><<</a>
           </li>
           <% } else { %>
           <li class="page-item disabled">
-            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen() - 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>" tabindex="1" aria-disabled="true"><<</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen() - 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>&recordsPerPage=<%=pagination.getRecordsPerPage()%>&organize=<%=organize.getOrganize()%>" tabindex="1" aria-disabled="true"><<</a>
           </li>
           <% }%>
 
@@ -62,19 +84,19 @@
             for(int i = pagination.getStartPageOnScreen(); i <= pagination.getEndPageOnScreen(); i++) {
               if(pagination.getPage() == i ) {
           %>
-              <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>"><%=i%></a></li>
+              <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>&recordsPerPage=<%=pagination.getRecordsPerPage()%>&organize=<%=organize.getOrganize()%>"><%=i%></a></li>
             <% } else { %>
-              <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>"><%=i%></a></li>
+              <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>&recordsPerPage=<%=pagination.getRecordsPerPage()%>&organize=<%=organize.getOrganize()%>"><%=i%></a></li>
             <% } %>
           <% } %>
 
           <% if (pagination.isHasNext()) { %>
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>" tabindex="1" aria-disabled="true">>></a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>&recordsPerPage=<%=pagination.getRecordsPerPage()%>&organize=<%=organize.getOrganize()%>" tabindex="1" aria-disabled="true">>></a>
           </li>
           <% } else { %>
           <li class="page-item disabled">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>" tabindex="1" aria-disabled="true">>></a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>&searchField=<%=searchData.getSearchField()%>&searchText=<%=searchData.getSearchText()%>&searchTime=<%=searchData.getSearchTime()%>&recordsPerPage=<%=pagination.getRecordsPerPage()%>&organize=<%=organize.getOrganize()%>" tabindex="1" aria-disabled="true">>></a>
           </li>
           <% }%>
         </ul>

@@ -73,6 +73,7 @@ nav {
 
 .nav-items>li>a {
     /* for Vertical Centering */
+    text-decoration-line: none;
     line-height: 60px;
     padding: 0 30px;
     color: rgba(0, 0, 0, 0.4);
@@ -298,10 +299,20 @@ nav {
     left: 25%;
     display: inline-block;
 }
+
+.pageOption > form {
+    position: relative;
+    left: 68%;
+}
+
 .form-select {
     width: 120px;
     margin-right: 5px;
 }
 .d-flex > input {
     width: 300px;
+}
+
+.table-group-divider > tr > td > a {
+    text-decoration-line: none;
 }
