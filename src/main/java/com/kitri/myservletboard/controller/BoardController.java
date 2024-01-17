@@ -1,9 +1,7 @@
-package com.kitri.myservletboard;
+package com.kitri.myservletboard.controller;
 
-import data.Organize;
-import data.Pagination;
-import data.SearchData;
-import service.BoardService;
+import com.kitri.myservletboard.data.*;
+import com.kitri.myservletboard.service.BoardService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -72,11 +70,12 @@ public class BoardController extends HttpServlet {
             view += "createForm.jsp";
         }
         else if (command.equals("/board/create")){
+            Long memberId = Long.valueOf(request.getParameter("memberId"));
             String title = request.getParameter("title");
             String writer = request.getParameter("writer");
             String content = request.getParameter("content");
 
-            Board boards = new Board(null, title, content, writer, LocalDateTime.now(), 0, 0);
+            Board boards = new Board(null, title, content, memberId, writer, LocalDateTime.now(), 0, 0);
             boardService.addBoard(boards);
 
             response.sendRedirect("/board/list");
@@ -91,10 +90,11 @@ public class BoardController extends HttpServlet {
         }
         else if (command.equals("/board/update")){
             Long id = Long.parseLong(request.getParameter("id"));
+            Long memberId = Long.parseLong(request.getParameter("memberId"));
             String title = request.getParameter("title");
             String content = request.getParameter("content");
 
-            Board boards = new Board(id, title, content, null, null, 0, 0);
+            Board boards = new Board(id, title, content, memberId,null, null, 0, 0);
             boardService.updateBoard(boards);
 
             response.sendRedirect("/board/list");
@@ -111,9 +111,34 @@ public class BoardController extends HttpServlet {
         else if (command.contains("/board/detail")){
             Long id = Long.parseLong(request.getParameter("id"));
             Board board = boardService.getBoard(id);
-            request.setAttribute("board", board);
+            ArrayList<Comment> comment = boardService.getComment(id);
 
+            request.setAttribute("comment", comment);
+            request.setAttribute("board", board);
             view += "detail.jsp";
+
+        }
+
+        else if (command.equals("/board/createComment")){
+            Long board_id = Long.parseLong(request.getParameter("board_id"));
+            Long member_id = Long.parseLong(request.getParameter("member_id"));
+            String content = request.getParameter("commentContent");
+
+            Comment comment = new Comment(board_id, member_id, content, LocalDateTime.now());
+            boardService.createComment(comment);
+
+            response.sendRedirect("/board/detail?id=" +  board_id);
+            return;
+        }
+
+        else if (command.equals("/board/deleteComment")){
+            Long id = Long.parseLong(request.getParameter("id"));
+            Long board_id = Long.parseLong(request.getParameter("board_id"));
+
+            boardService.deleteComment(id);
+
+            response.sendRedirect("/board/detail?id=" +  board_id);
+            return;
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(view);

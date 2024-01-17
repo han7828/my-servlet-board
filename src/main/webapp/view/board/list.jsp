@@ -1,12 +1,13 @@
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="com.kitri.myservletboard.Board" %>
-<%@ page import="data.Pagination" %>
-<%@ page import="data.SearchData" %>
-<%@ page import="data.Organize" %>
+<%@ page import="com.kitri.myservletboard.data.Board" %>
+<%@ page import="com.kitri.myservletboard.data.Pagination" %>
+<%@ page import="com.kitri.myservletboard.data.SearchData" %>
+<%@ page import="com.kitri.myservletboard.data.Organize" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <% Pagination pagination = (Pagination) request.getAttribute("pagination"); %>
 <% SearchData searchData = (SearchData) request.getAttribute("searchData"); %>
 <% Organize organize = (Organize) request.getAttribute("organize"); %>
+<%String[] members = (String[]) session.getAttribute("members");%>
 <!DOCTYPE html>
 <html lang="en">
 <jsp:include page="/view/common/head.jsp">
@@ -65,7 +66,9 @@
         </tbody>
       </table>
       <div>
+        <% if ( members != null ) { %>
         <a href="/board/createForm" role="button" class="btn btn-secondary my-2 my-sm-0">글쓰기</a>
+        <% } %>
       </div>
       <div class="d-flex justify-content-center">
       <nav aria-label="Page navigation example">
@@ -132,5 +135,8 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous">
+  setTimeout(() => {
+    document.querySelector(".notification").hidden = true;
+  }, 2000);
 </script>
 </html>

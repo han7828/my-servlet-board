@@ -1,9 +1,6 @@
-package dao;
+package com.kitri.myservletboard.dao;
 
-import com.kitri.myservletboard.Board;
-import data.Organize;
-import data.Pagination;
-import data.SearchData;
+import com.kitri.myservletboard.data.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -48,12 +45,13 @@ public class BoardJdbcDao implements BoardDao{
                 Long id = rs.getLong("id");
                 String title = rs.getString("title");
                 String content = rs.getString("content");
+                Long memberId = rs.getLong("member_Id");
                 String writer = rs.getString("writer");
                 LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
                 int viewCount = rs.getInt("view_count");
                 int commentCount = rs.getInt("comment_count");
 
-                boards.add(new Board(id, title, content, writer, createdAt, viewCount, commentCount));
+                boards.add(new Board(id, title, content, memberId, writer, createdAt, viewCount, commentCount));
             }
         } catch (Exception e) {
 
@@ -90,12 +88,13 @@ public class BoardJdbcDao implements BoardDao{
                 Long id = rs.getLong("id");
                 String title = rs.getString("title");
                 String content = rs.getString("content");
+                Long memberId = rs.getLong("member_Id");
                 String writer = rs.getString("writer");
                 LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
                 int viewCount = rs.getInt("view_count");
                 int commentCount = rs.getInt("comment_count");
 
-                boards.add(new Board(id, title, content, writer, createdAt, viewCount, commentCount));
+                boards.add(new Board(id, title, content, memberId, writer, createdAt, viewCount, commentCount));
             }
         } catch (Exception e) {
 
@@ -129,15 +128,16 @@ public class BoardJdbcDao implements BoardDao{
             rs = ps.executeQuery();
 
             while (rs.next()){
-                Long id_ = rs.getLong("id");
-                String title_ = rs.getString("title");
-                String content_ = rs.getString("content");
-                String writer_ = rs.getString("writer");
-                LocalDateTime createdAt_ = rs.getTimestamp("created_at").toLocalDateTime();
-                int viewCount_ = rs.getInt("view_Count");
-                int commentCount_ = rs.getInt("comment_count");
+                Long boardId = rs.getLong("id");
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                Long memberId = rs.getLong("member_Id");
+                String writer = rs.getString("writer");
+                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+                int viewCount = rs.getInt("view_count");
+                int commentCount = rs.getInt("comment_count");
 
-                board = new Board(id_, title_, content_, writer_, createdAt_, viewCount_, commentCount_);
+                board = new Board(boardId, title, content, memberId, writer, createdAt, viewCount, commentCount);
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -153,11 +153,12 @@ public class BoardJdbcDao implements BoardDao{
 
         try {
             connection = connectDB();
-            String sql = "INSERT INTO board (title, content, writer) VALUES ( ?, ?, ?)";
+            String sql = "INSERT INTO board (title, content, member_id, writer) VALUES ( ?, ?, ?, ?)";
             ps = connection.prepareStatement(sql);
             ps.setString(1,board.getTitle());
             ps.setString(2,board.getContent());
-            ps.setString(3,board.getWriter());
+            ps.setLong(3,board.getMemberId());
+            ps.setString(4,board.getWriter());
             ps.executeUpdate();
         } catch (Exception e) {
 
@@ -179,11 +180,12 @@ public class BoardJdbcDao implements BoardDao{
 
         try {
             connection = connectDB();
-            String sql = "UPDATE board SET title = ?, content = ? WHERE id = ?";
+            String sql = "UPDATE board SET title = ?, content = ? WHERE id = ? AND member_id = ?";
             ps = connection.prepareStatement(sql);
             ps.setString(1,board.getTitle());
             ps.setString(2,board.getContent());
             ps.setLong(3,board.getId());
+            ps.setLong(4,board.getMemberId());
             ps.executeUpdate();
         } catch (Exception e) {
 
@@ -282,12 +284,13 @@ public class BoardJdbcDao implements BoardDao{
                 Long id = rs.getLong("id");
                 String title = rs.getString("title");
                 String content = rs.getString("content");
+                Long memberId = rs.getLong("member_Id");
                 String writer = rs.getString("writer");
                 LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
-                int viewCount = rs.getInt("view_Count");
+                int viewCount = rs.getInt("view_count");
                 int commentCount = rs.getInt("comment_count");
 
-                boards.add(new Board(id, title, content, writer, createdAt, viewCount, commentCount));
+                boards.add(new Board(id, title, content, memberId, writer, createdAt, viewCount, commentCount));
             }
         } catch (Exception e) {
         } finally {
@@ -342,6 +345,7 @@ public class BoardJdbcDao implements BoardDao{
         }
         return count;
     }
+
     public void viewCount(Long id) {
         Connection connection = null;
         PreparedStatement ps = null;
@@ -365,4 +369,247 @@ public class BoardJdbcDao implements BoardDao{
             }
         }
     }
+    public void join(Member member) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = null;
+            connection = connectDB();
+            if ( member.getEmail() == null) {
+                sql = "INSERT INTO member (`login_id`, `password`, `name`) VALUES ('"+ member.getMemberId() +"', '" + member.getPw() + "', '" + member.getName() + "')";
+            } else {
+                sql = "INSERT INTO member (`login_id`, `password`, `name`, `email`) VALUES ('" + member.getMemberId() + "', '" + member.getPw() + "', '" + member.getName() + "', '" + member.getEmail() + "')";
+            }
+            ps = connection.prepareStatement(sql);
+            ps.executeUpdate();
+        }
+        catch (Exception e) {
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    @Override
+    public boolean searchId(String id) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            connection = connectDB();
+            String sql = "SELECT * FROM member WHERE login_id = '" + id + "';";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if ( rs.next() ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        catch (Exception e) {
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public boolean searchPW(String id, String pw) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            connection = connectDB();
+            String sql = "SELECT * FROM member WHERE login_id = '" + id + "' AND password = '" + pw + "';";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if ( rs.next() ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        catch (Exception e) {
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String[] memberData(String id, String pw) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String[] member = new String[5];
+
+        try {
+            connection = connectDB();
+            String sql = "SELECT * FROM member WHERE login_id = '" + id + "' AND password = '" + pw + "';";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                member[0] = String.valueOf(rs.getLong("id"));
+                member[1] = rs.getString("login_id");
+                member[2] = rs.getString("password");
+                member[3] = rs.getString("name");
+                member[4] = rs.getString("email");
+            }
+        } catch (Exception e) {
+
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return member;
+    }
+
+    @Override
+    public void registration(Member member) {
+
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            connection = connectDB();
+            String sql = null;
+            if ( member.getEmail() == null ) {
+                sql = "UPDATE member SET `password` = '" + member.getPw()+ "', `name` = '" + member.getName() + "' WHERE (`id` = '" + member.getId() + "') AND (`login_id` = '" + member.getMemberId() + "');";
+            } else {
+                sql = "UPDATE member SET `password` = '" + member.getPw()+ "', `name` = '" + member.getName() + "', `email` = '" + member.getEmail() + "' WHERE (`id` = '" + member.getId() + "') AND (`login_id` = '" + member.getMemberId() + "');";
+            }
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+        }
+        catch (Exception e) {
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public ArrayList<Comment> getComment(Long id) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        ArrayList<Comment> comment = new ArrayList<>();
+
+        try {
+            connection = connectDB();
+            String sql = "SELECT * FROM comment c, member m  WHERE c.member_id = m.id AND board_id = ? ;";
+            ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Long comment_id = rs.getLong("id");
+                Long board_id = rs.getLong("board_id");
+                Long member_id = rs.getLong("member_id");
+                String commenter = rs.getString("name");
+                String content = rs.getString("content");
+                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+
+                comment.add(new Comment(comment_id, board_id, member_id, commenter, content, createdAt));
+            }
+        } catch (Exception e) {
+
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return comment;
+    }
+
+    @Override
+    public void createComment(Comment comment) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            connection = connectDB();
+            String sql = "INSERT INTO comment ( `board_id`, `member_id`, `content`) VALUES ( ?, ?, ?)";
+            ps = connection.prepareStatement(sql);
+            ps.setLong(1,comment.getBoard_id());
+            ps.setLong(2,comment.getMember_id());
+            ps.setString(3,comment.getContent());
+            ps.executeUpdate();
+        } catch (Exception e) {
+
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void deleteComment(Long id) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            connection = connectDB();
+            String sql = "DELETE FROM comment WHERE id = ?";
+            ps = connection.prepareStatement(sql);
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        } catch (Exception e) {
+
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
+

@@ -316,3 +316,17 @@ nav {
 .table-group-divider > tr > td > a {
     text-decoration-line: none;
 }
+
+#commentContent {
+    height : 100px;
+}
+
+.btn-outline-secondary {
+    padding: 4px;
+    font-size: small;
+}
+
+#createComment {
+    padding: 5px;
+    width: 50px;
+}
