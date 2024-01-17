@@ -1,11 +1,7 @@
-package dao;
+package com.kitri.myservletboard.dao;
 
-import com.kitri.myservletboard.Board;
-import data.Organize;
-import data.Pagination;
-import data.SearchData;
+import com.kitri.myservletboard.data.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class BoardmemoryDao implements BoardDao{
@@ -16,16 +12,6 @@ public class BoardmemoryDao implements BoardDao{
 
     ArrayList<Board> memoryBoardDB = new ArrayList<>();
     private BoardmemoryDao() {
-        memoryBoardDB.add(new Board(1L, "첫번째 글입니다!", "반갑습니다.", "박xx", LocalDateTime.now(), 16, 4));
-        memoryBoardDB.add(new Board(2L, "두번째 글입니다!", "반갑습니다22.", "이xx", LocalDateTime.now(), 11, 2));
-        memoryBoardDB.add(new Board(3L, "세번째 글입니다!", "반갑습니다33.", "우xx", LocalDateTime.now(), 23, 3));
-        memoryBoardDB.add(new Board(4L, "네번째 글입니다!", "반갑습니다44.", "하xx", LocalDateTime.now(), 19, 5));
-        memoryBoardDB.add(new Board(5L, "다섯번째 글입니다!", "반갑습니다55.", "침xx", LocalDateTime.now(), 26, 1));
-        memoryBoardDB.add(new Board(6L, "여섯번째 글입니다!", "반갑습니다66.", "하xx", LocalDateTime.now(), 46, 0));
-        memoryBoardDB.add(new Board(7L, "일곱번째 글입니다!", "반갑습니다77.", "오xx", LocalDateTime.now(), 6, 3));
-        memoryBoardDB.add(new Board(8L, "여덟번째 글입니다!", "반갑습니다88.", "김xx", LocalDateTime.now(), 11, 2));
-        memoryBoardDB.add(new Board(9L, "아홉번째 글입니다!", "반갑습니다99.", "김xx", LocalDateTime.now(), 12, 4));
-        memoryBoardDB.add(new Board(10L, "열번째 글입니다!", "반갑습니다1111.", "황xx", LocalDateTime.now(), 24, 6));
     }
     @Override
     public ArrayList<Board> getAll() { return memoryBoardDB; }
@@ -73,9 +59,22 @@ public class BoardmemoryDao implements BoardDao{
         memoryBoardDB.contains(searchData);
         return null;
     }
-
     @Override
-    public void viewCount(Long id) {
-
-    }
+    public void viewCount(Long id) { }
+    @Override
+    public void join(Member member) { }
+    @Override
+    public boolean searchId(String id) { return false; }
+    @Override
+    public boolean searchPW(String id, String pw) { return false; }
+    @Override
+    public String[] memberData(String id, String pw) { return new String[0]; }
+    @Override
+    public void registration(Member member) { }
+    @Override
+    public ArrayList<Comment> getComment(Long id) { return null; }
+    @Override
+    public void createComment(Comment comment) { }
+    @Override
+    public void deleteComment(Long id) { }
 }

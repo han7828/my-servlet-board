@@ -1,4 +1,4 @@
-package data;
+package com.kitri.myservletboard.data;
 
 import java.time.LocalDate;
 

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%String[] members = (String[]) session.getAttribute("members");%>
 <!DOCTYPE html>
 <html lang="ko">
 <jsp:include page="/view/common/head.jsp">
@@ -12,7 +13,8 @@
             <h4 class="mb-3"><b>회원 정보 수정</b></h4>
             <hr>
             <br>
-            <form class="validation-form" novalidate>
+            <form class="validation-form" novalidate action="/member/registration">
+                <input hidden="hidden" name="id" value="<%=members[0]%>">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="name">이름</label>
@@ -22,8 +24,8 @@
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="name">아이디</label>
-                        <input type="text" class="form-control" id="userId" placeholder="아이디를 입력해주세요" value="" required>
+                        <label for="memberId">아이디</label>
+                        <input type="text" class="form-control" id="memberId" placeholder="<%=members[1]%>>" value="<%=members[1]%>" readonly>
                         <div class="invalid-feedback">
                             아이디를 입력해주세요.
                         </div>
@@ -31,15 +33,15 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="nickname">비밀번호</label>
+                        <label for="password">비밀번호</label>
                         <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요" value="" required>
                         <div class="invalid-feedback">
                             비밀번호를 입력해주세요.
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="nickname">비밀번호 확인</label>
-                        <input type="password" class="form-control" id="password" placeholder="비밀번호를 한 번 더 입력해주세요" value="" required>
+                        <label for="repassword">비밀번호 확인</label>
+                        <input type="password" class="form-control" id="repassword" placeholder="비밀번호를 한 번 더 입력해주세요" value="" required>
                         <div class="invalid-feedback">
                             비밀번호를 입력해주세요.
                         </div>
@@ -47,22 +49,22 @@
                 </div>
                 <div class="mb-3">
                     <label for="email">이메일</label>
-                    <input type="email" class="form-control" id="email" placeholder="Bootstrap@example.com" required>
+                    <input type="email" class="form-control" id="email" placeholder="이메일을 입력해주세요">
                     <div class="invalid-feedback">
                         이메일을 입력해주세요.
                     </div>
                 </div>
-                <div class="mb-3">
-                    <label for="address">주소</label>
-                    <input type="text" class="form-control" id="address" placeholder="서울특별시 구로구" required>
-                    <div class="invalid-feedback">
-                        주소를 입력해주세요.
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <label for="address2">상세주소<span class="text-muted">&nbsp;(필수 아님)</span></label>
-                    <input type="text" class="form-control" id="address2" placeholder="상세주소를 입력해주세요.">
-                </div>
+<%--                <div class="mb-3">--%>
+<%--                    <label for="address">주소</label>--%>
+<%--                    <input type="text" class="form-control" id="address" placeholder="서울특별시 구로구" required>--%>
+<%--                    <div class="invalid-feedback">--%>
+<%--                        주소를 입력해주세요.--%>
+<%--                    </div>--%>
+<%--                </div>--%>
+<%--                <div class="mb-3">--%>
+<%--                    <label for="address2">상세주소<span class="text-muted">&nbsp;(필수 아님)</span></label>--%>
+<%--                    <input type="text" class="form-control" id="address2" placeholder="상세주소를 입력해주세요.">--%>
+<%--                </div>--%>
                 <hr class="mb-4">
                 <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="aggrement" required>
@@ -71,7 +73,7 @@
                 <br>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <button class="btn btn-secondary btn-block" type="submit">회원 정보 수정</button>
+                        <button class="btn btn-secondary btn-block" type="submit" onclick="return confirm('회원가입을 완료합니까?')">회원 정보 수정</button>
                     </div>
                     <div class="col-md-6 mb-3">
                         <button class="btn btn-secondary btn-block" type="submit">취소</button>
@@ -103,6 +105,11 @@
                 }, false);
             });
         }, false);
+
+        setTimeout(() => {
+            document.querySelector(".notification").hidden = true;
+        }, 2000);
+
     </script>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3b
